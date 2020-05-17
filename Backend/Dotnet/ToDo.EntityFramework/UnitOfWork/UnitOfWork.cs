@@ -7,10 +7,15 @@ namespace ToDo.Persistence.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private ToDoAppContext _appContext = new ToDoAppContext();
+        private ToDoAppContext _appContext;
         private IUsersRepository _Users = null;
         private IRepository<Lists> _Lists = null;
         private IRepository<Tasks> _Tasks = null;
+
+        public UnitOfWork(ToDoAppContext toDoAppContext)
+        {
+            _appContext = toDoAppContext;
+        }
 
         public IUsersRepository Users 
         { 

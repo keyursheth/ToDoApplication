@@ -9,14 +9,6 @@ namespace ToDo.Persistence.DBContext
     {
         private readonly IConfiguration configuration;
 
-        public ToDoAppContext()
-        {
-            var builder = new ConfigurationBuilder()
-                   .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
-
-            configuration = builder.Build();
-        }
-
         public ToDoAppContext(DbContextOptions<ToDoAppContext> options)
             : base(options)
         {
@@ -25,14 +17,6 @@ namespace ToDo.Persistence.DBContext
         public virtual DbSet<Lists> Lists { get; set; }
         public virtual DbSet<Tasks> Tasks { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("toDoApp"));
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

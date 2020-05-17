@@ -28,18 +28,18 @@ namespace TestApp
             #endregion
 
             #region Using UnitOfWork
-            using (IUnitOfWork unitOfWork = new UnitOfWork())
-            {
-                var users = unitOfWork.Users.GetAll();
+            //using (IUnitOfWork unitOfWork = new UnitOfWork())
+            //{
+            //    var users = unitOfWork.Users.GetAll();
                 
-                if (users != null && users.Count() > 0)
-                {
-                    foreach (var user in users)
-                    {
-                        Console.WriteLine(user.FirstName);
-                    }
-                }
-            }            
+            //    if (users != null && users.Count() > 0)
+            //    {
+            //        foreach (var user in users)
+            //        {
+            //            Console.WriteLine(user.FirstName);
+            //        }
+            //    }
+            //}            
             #endregion
 
             Console.Read();
