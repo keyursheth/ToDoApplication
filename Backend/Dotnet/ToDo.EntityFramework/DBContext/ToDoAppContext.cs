@@ -7,8 +7,6 @@ namespace ToDo.Persistence.DBContext
 {
     public partial class ToDoAppContext : DbContext
     {
-        private readonly IConfiguration configuration;
-
         public ToDoAppContext(DbContextOptions<ToDoAppContext> options)
             : base(options)
         {
