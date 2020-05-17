@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToDo.EntityFramework\ToDo.Persistence.csproj" />
+    <ProjectReference Include="..\ToDo.Persistence\ToDo.Persistence.csproj" />
+    <ProjectReference Include="..\ToDo.Services\ToDo.Services.csproj" />
   </ItemGroup>
 
 

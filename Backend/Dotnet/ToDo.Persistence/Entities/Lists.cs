@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ToDo.Persistence.Models
+namespace ToDo.Persistence.Entities
 {
-    public partial class Users
+    public partial class Lists
     {
-        public Users()
+        public Lists()
         {
-            Lists = new HashSet<Lists>();
             Tasks = new HashSet<Tasks>();
         }
 
+        public int ListId { get; set; }
+        public string ListName { get; set; }
         public int UserId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
         public bool IsDelete { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public virtual ICollection<Lists> Lists { get; set; }
+        public virtual Users User { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }
     }
 }

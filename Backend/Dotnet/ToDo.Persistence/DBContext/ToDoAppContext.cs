@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using ToDo.Persistence.Models;
+using ToDo.Persistence.Entities;
 
 namespace ToDo.Persistence.DBContext
 {

@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ToDo.Persistence.DBContext;
-using ToDo.Persistence.UnitOfWork;
+using ToDo.ServiceLayer.Interfaces;
+using ToDo.Services.Services;
 
 namespace ToDo.WebApi
 {
@@ -29,12 +23,11 @@ namespace ToDo.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<ITasksService, TasksService>();
             services.AddDbContext<ToDoAppContext>
-                (optionBuilder =>
-                {
-                    optionBuilder.UseSqlServer(Configuration.GetConnectionString("toDoApp"));
-                });
-            services.AddScoped<IUnitOfWork, UnitOfWork>();            
+            (
+                optionBuilder => { optionBuilder.UseSqlServer(Configuration.GetConnectionString("toDoApp")); }
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
