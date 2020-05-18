@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ToDo.ServiceLayer.Models
+﻿namespace ToDo.Domain.Models
 {
-    public class TaskDomainModel
+    public class ToDoItem
     {
         public int TaskId { get; set; }
         public string TaskDescription { get; set; }

@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using ToDo.ServiceLayer.Interfaces;
-using ToDo.ServiceLayer.Models;
+using ToDo.Domain.Contracts;
+using ToDo.Domain.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,22 +16,28 @@ namespace ToDo.WebApi.Controllers
     {
         private readonly ILogger<TasksController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly ITasksService _taskService;
+        private readonly ITaskRepository _taskRepository;
 
-        public TasksController(ILogger<TasksController> logger, IConfiguration configuration, ITasksService tasksService)
+        public TasksController(ILogger<TasksController> logger, IConfiguration configuration, ITaskRepository taskRepository)
         {
             _logger = logger;
             _configuration = configuration;
-            _taskService = tasksService;
+            _taskRepository = taskRepository;
         }
 
 
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<TaskDomainModel> Get()
+        public IEnumerable<ToDoItem> Get()
         {
-            List<TaskDomainModel> taskDomainModels = _taskService.GetTasksByUserId(1).ToList();
+            List<ToDoItem> taskDomainModels = _taskRepository.GetToDoItemsByUserId(1).ToList();
             return taskDomainModels;
+        }
+
+        [HttpPost]
+        public void Add(ToDoItem toDoItem)
+        {
+            _taskRepository.AddToDoItem(toDoItem);
         }
     }
 }

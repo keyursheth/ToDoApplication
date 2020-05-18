@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToDo.Domain.Contracts;
+using ToDo.Infrastructure.Repositories;
 using ToDo.Persistence.DBContext;
-using ToDo.ServiceLayer.Interfaces;
-using ToDo.Services.Services;
 
 namespace ToDo.WebApi
 {
@@ -22,12 +22,14 @@ namespace ToDo.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddTransient<ITasksService, TasksService>();
+            services.AddControllers();            
             services.AddDbContext<ToDoAppContext>
             (
-                optionBuilder => { optionBuilder.UseSqlServer(Configuration.GetConnectionString("toDoApp")); }
+                optionBuilder => { optionBuilder.UseSqlServer(Configuration.GetConnectionString("toDoApp")); },
+                ServiceLifetime.Scoped
             );
+
+            services.AddScoped<ITaskRepository, TaskRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
