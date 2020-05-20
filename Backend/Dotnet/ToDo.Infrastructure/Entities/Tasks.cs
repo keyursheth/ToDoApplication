@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ToDo.Persistence.Entities
+namespace ToDo.Infrastructure.Entities
 {
     public partial class Tasks
     {

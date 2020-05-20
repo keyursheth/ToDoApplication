@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using ToDo.Persistence.Entities;
+using ToDo.Infrastructure.Entities;
 
-namespace ToDo.Persistence.DBContext
+namespace ToDo.Infrastructure.DBContext
 {
     public partial class ToDoAppContext : DbContext
     {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ToDo.Domain.Contracts;
 using ToDo.Infrastructure.Repositories;
-using ToDo.Persistence.DBContext;
+using ToDo.Infrastructure.DBContext;
 
 namespace ToDo.WebApi
 {
