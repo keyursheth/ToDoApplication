@@ -7,6 +7,7 @@ using ToDo.Domain.Contracts;
 using ToDo.Domain.Models;
 using ToDo.Infrastructure.DBContext;
 using ToDo.Infrastructure.Entities;
+using ToDo.Infrastructure.Mappers;
 
 namespace ToDo.Infrastructure.Repositories
 {
@@ -21,16 +22,7 @@ namespace ToDo.Infrastructure.Repositories
 
         public async Task<int> AddToDoItem(ToDoItem toDoItem)
         {
-            Tasks tasks = new Tasks()
-            {
-                Text = toDoItem.TaskDescription,
-                ListId = 1,
-                UserId = 1,
-                IsComplete = false,
-                IsDelete = false,
-                ModifiedDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            };
+            Tasks tasks = TasksEntityMapper.GetTasks(toDoItem);
 
             await _appContext.Tasks.AddAsync(tasks);
             
@@ -45,7 +37,7 @@ namespace ToDo.Infrastructure.Repositories
 
             var tasksByUserId = await _appContext.Tasks
                 .Include(l => l.List)
-                .Where(todo => todo.UserId == userId && todo.IsDelete == false)
+                .Where(todo => todo.UserId == userId)
                 .ToListAsync();
 
             var allTasks = tasksByUserId
@@ -54,13 +46,31 @@ namespace ToDo.Infrastructure.Repositories
                     string.IsNullOrEmpty(t.List.ListName) == false && 
                     t.List.IsDelete == false).ToList();
 
-            foreach (var todo in allTasks)
+            foreach (var task in allTasks)
             {
-                toDoItems.Add(ToDoItem.CreateTodoItem(todo.ListId, todo.ReminderDate, todo.DueDate, todo.Text, 
-                    todo.IsComplete, todo.List.ListName, todo.TaskId));
+                toDoItems.Add(TasksEntityMapper.GetToDoItem(task));
             }
 
             return toDoItems;
+        }
+
+        public async void UpdateTask(ToDoItem toDoItem)
+        {
+            var task = await _appContext.Tasks.FindAsync(toDoItem.TaskId);
+
+            if (task != null)
+            {
+                task.Text = toDoItem.TaskDescription;
+                task.IsComplete = toDoItem.IsTaskComplete;
+                task.IsDelete = toDoItem.IsDelete;                
+                task.DueDate = toDoItem.DueDate;
+                task.ReminderDate = toDoItem.ReminderDateTime;
+                task.ModifiedDate = DateTime.Now;
+
+                _appContext.Tasks.Update(task);
+
+                await _appContext.SaveChangesAsync(); 
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ToDo.Domain.Contracts
     public interface ITaskRepository
     {
         Task<IEnumerable<ToDoItem>> GetToDoItemsByUserId(int userId);
-
         Task<int> AddToDoItem(ToDoItem toDoItem);
+        void UpdateTask(ToDoItem toDoItem);
     }
 }
