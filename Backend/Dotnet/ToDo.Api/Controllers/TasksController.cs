@@ -1,119 +1,149 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using ToDo.Api.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ToDo.Api.DBContext;
+using ToDo.Api.Entities;
 using ToDo.Api.Mappers;
-using ToDo.Domain.Contracts;
-using ToDo.Domain.Models;
+using ToDo.Api.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace ToDo.WebApi.Controllers
+namespace ToDo.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly ILogger<TasksController> _logger;
-        private readonly ITaskRepository _taskRepository;
+        private readonly ToDoAppContext _context;
+        private const int USERID = 1;
 
-        const int USERID = 1;
-
-        public TasksController(ILogger<TasksController> logger, ITaskRepository taskRepository)
+        public TasksController(ToDoAppContext context)
         {
-            _logger = logger;
-            _taskRepository = taskRepository;
+            _context = context;
         }
 
-
-        // GET: api/<controller>
         [HttpGet]
-        [ProducesResponseType(statusCode: StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(statusCode: StatusCodes.Status200OK)]
-        [ProducesResponseType(statusCode: StatusCodes.Status204NoContent)]
-        [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<IEnumerable<TaskModel>>> GetTasksByUser()
         {
-            int userId = USERID;
-            List<TaskDTO> taskDTOs = new List<TaskDTO>();
-
-            if (userId == 0)
-                return BadRequest();
-
             try
             {
-                IEnumerable<ToDoItem> toDoItems = await _taskRepository.GetToDoItemsByUserId(userId);
+                List<TaskModel> tasksModels = new List<TaskModel>();
 
-                if (toDoItems == null || (toDoItems != null && toDoItems.Count() == 0))
-                    return StatusCode(StatusCodes.Status204NoContent);
+                List<Tasks> tasks = await _context.Tasks
+                    .Include(i => i.List)
+                    .Where(t => t.UserId == USERID && t.IsDelete == false)
+                    .ToListAsync();
 
-                foreach (var todo in toDoItems)
-                {
-                    taskDTOs.Add(TasksDTOMapper.GetTaskDTO(todo));
-                }
+                if (tasks == null)
+                    return BadRequest();
+
+                foreach (var task in tasks)
+                    tasksModels.Add(TasksMapper.GetTaskModelFromTaskEntity(task));
+
+                return Ok(tasksModels);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                //_logger.LogError(ex, ex.Message);
+                return BadRequest();
             }
-            
-            return Ok(taskDTOs);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTask(int id, [FromBody]TaskModel taskModel)
+        {
+            Tasks tasks = await _context.Tasks.FindAsync(id);
+
+            if (tasks == null)
+            {
+                return BadRequest();
+            }
+
+            tasks.Text = taskModel.taskDescription;
+            tasks.IsComplete = taskModel.isComplete;
+            tasks.ReminderDate = null;
+
+            if (string.IsNullOrEmpty(taskModel.reminderDatetime) == false)
+                tasks.ReminderDate = Convert.ToDateTime(taskModel.reminderDatetime);
+
+            tasks.ModifiedDate = DateTime.Now;
+
+            _context.Entry(tasks).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TasksExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+
+            return Ok();
         }
 
         [HttpPost]
-        [ProducesResponseType(statusCode: StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(statusCode: StatusCodes.Status201Created)]
-        [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Add([FromBody]TaskDTO taskDTO)
+        public async Task<ActionResult<Tasks>> AddTask([FromBody]TaskModel taskModel)
         {
-            int taskId = 0;
-
-            if (taskDTO.listId == 0 || string.IsNullOrEmpty(taskDTO.taskDescription))
-                return BadRequest();
-
             try
             {
-                taskDTO.userId = USERID;
-                ToDoItem toDoItem = TasksDTOMapper.GetToDoItem(taskDTO);
-                taskId = await _taskRepository.AddToDoItem(toDoItem);
+                if (string.IsNullOrEmpty(taskModel.taskDescription))
+                    return BadRequest();
+
+                Tasks tasks = TasksMapper.GetTasksFromTaskModel(taskModel);
+
+                tasks.UserId = USERID;
+
+                _context.Tasks.Add(tasks);
+                
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetTasksByUser", tasks.TaskId);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                //_logger.LogError(ex, ex.Message);
+                return BadRequest();
             }
-
-            return CreatedAtAction("Add", taskId);
         }
 
-        [HttpPut]
-        [ProducesResponseType(statusCode: StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(statusCode: StatusCodes.Status201Created)]
-        [ProducesResponseType(statusCode: StatusCodes.Status500InternalServerError)]
-        public IActionResult Update([FromBody]TaskDTO taskDTO)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTask(int id)
         {
             try
             {
-                if (taskDTO == null || taskDTO.taskId == 0)
-                    return BadRequest();
+                var tasks = await _context.Tasks.FindAsync(id);
+                if (tasks == null)
+                {
+                    return NotFound();
+                }
 
-                taskDTO.userId = USERID;
-                ToDoItem toDoItem = TasksDTOMapper.GetToDoItem(taskDTO);
-
-                _taskRepository.UpdateTask(toDoItem);
+                _context.Tasks.Remove(tasks);
+                await _context.SaveChangesAsync();
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                //_logger.LogError(ex, ex.Message);
+                return BadRequest();
             }
+        }
+
+        private bool TasksExists(int id)
+        {
+            return _context.Tasks.Any(e => e.TaskId == id);
         }
     }
 }

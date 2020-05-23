@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ToDo.Domain.Contracts;
-using ToDo.Infrastructure.Repositories;
-using ToDo.Infrastructure.DBContext;
+using Microsoft.Extensions.Logging;
+using ToDo.Api.DBContext;
 
 namespace ToDo.WebApi
 {
@@ -27,7 +26,10 @@ namespace ToDo.WebApi
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000");
+                        builder
+                            .WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
                     });
             });
 
@@ -37,8 +39,6 @@ namespace ToDo.WebApi
                 optionBuilder => { optionBuilder.UseSqlServer(Configuration.GetConnectionString("toDoApp")); },
                 ServiceLifetime.Scoped
             );
-
-            services.AddScoped<ITaskRepository, TaskRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

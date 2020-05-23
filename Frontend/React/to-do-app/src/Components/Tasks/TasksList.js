@@ -1,46 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const TasksList = () => {
+const TasksList = (props) => {
 
-    const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [todoItems, setToDoItems] = useState([]);
+    return (
+        <div>
+            <h1>Tasks List</h1>
+            <ul>
+                {
+                    props.todoItems.map((item) => {
 
-    useEffect(() => {        
-        fetch('https://localhost:44347/api/tasks')
-            .then((res) => {
-                return res.json();
-            })
-            .then((result) => {                
-                setIsLoaded(true);
-                setToDoItems(result);
-            }, 
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            })
-    }, []);
+                        const completeValue = 'mark ' + 
+                            (item.isComplete === false ? 'complete' : 'in-complete');
 
-    if(error) {
-        return <div>Error: {error.message}</div>
-    }
-    else if(!isLoaded) {
-        return <div>Loading...</div>
-    }
-    else {
-        const itemsList = todoItems.map((item) => {
-            return <li key={item.taskId}>{item.taskDescription}</li>
-        });        
+                        const taskData = {
+                            "taskDescription": item.taskDescription,
+                            "isComplete": !item.isComplete,
+                            "reminderDatetime": item.reminderDatetime
+                        }
 
-        return (
-            <div>
-                <h1>Tasks List</h1>
-                <ul>
-                    {itemsList}
-                </ul>
-            </div>
-        );
-    }    
+                        const taskCompleteStyle = (item.isComplete === false ? '' : 'line-through');
+
+                        const editClickHandler = (taskId) => {
+
+                        }
+                        
+                        return (
+                            <li key={item.taskId}>
+                                <span
+                                    id={"spanTask" + item.taskId} 
+                                    style={{textDecoration:taskCompleteStyle, display:''}}>
+                                        {item.taskDescription}
+                                </span> 
+                                {/* <input 
+                                    id={"txtTaskText" + item.taskId} 
+                                    type="text"
+                                    value={item.taskDescription}
+                                    style={{display:'none'}}
+                                /> */}
+                                <input 
+                                    type="button" 
+                                    value="edit" 
+                                    style={{marginLeft:'10px'}} 
+                                    onClick={() => editClickHandler(item.taskId)}
+                                />
+                                <input 
+                                    type="button" 
+                                    value="delete" 
+                                    style={{marginLeft:'10px'}} 
+                                    onClick={() => { props.onTaskDelete(item.taskId) }}
+                                />
+                                <input 
+                                    type="button" 
+                                    value={completeValue} 
+                                    style={{marginLeft:'10px'}}
+                                    onClick={() => { props.onTaskUpdate(item.taskId, taskData) }} 
+                                />
+                            </li>
+                        )}
+                    )
+                }
+            </ul>
+        </div>
+    );
 }
 
 export default TasksList

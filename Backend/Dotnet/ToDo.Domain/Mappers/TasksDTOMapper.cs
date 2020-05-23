@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ToDo.Api.DTOs;
+using ToDo.Domain.DTOs;
 using ToDo.Domain.Models;
 
-namespace ToDo.Api.Mappers
+namespace ToDo.Domain.Mappers
 {
     public class TasksDTOMapper
     {

@@ -1,17 +1,29 @@
 import React, { useRef } from 'react'
 
-function AddTask() {
+const AddTask = (props) => {
 
-    const newTaskValue = useRef('');
+    const taskText = useRef('');
 
-    const addTaskhandler = () => {
-        console.log(newTaskValue.current.value);        
+    const addTaskClick = () => {
+        const newTaskText = taskText.current.value;
+        if (newTaskText !== '') {
+            taskText.current.value = '';
+            props.onTaskAdd(newTaskText);
+        }        
     }
 
     return(
         <div>
-            <input type="text" ref={newTaskValue} />             
-            <input type="button" value="Add Task" style={{marginLeft:'10px'}} onClick={addTaskhandler} />
+            <input 
+                type="text" 
+                ref={taskText} 
+            />             
+            <input 
+                type="button" 
+                value="Add Task" 
+                style={{marginLeft:'10px'}} 
+                onClick={() => addTaskClick()} 
+            />
         </div>
     )
 }
