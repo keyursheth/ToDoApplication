@@ -53,6 +53,30 @@ namespace ToDo.Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TaskModel>> GetTaskById(int id)
+        {
+            try
+            {
+                if (id == 0)
+                    return BadRequest();
+
+                Tasks tasks = await _context.Tasks.FindAsync(id);
+
+                if (tasks == null)
+                    return NotFound();
+
+                TaskModel taskModel = TasksMapper.GetTaskModelFromTaskEntity(tasks);
+
+                return Ok(taskModel);
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError(ex, ex.Message);
+                return BadRequest();
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, [FromBody]TaskModel taskModel)
         {

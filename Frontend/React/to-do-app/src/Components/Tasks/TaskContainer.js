@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import TasksList from './TasksList'
+import TasksListNew from './TasksListNew'
 import AddTask from './AddTask'
+import { Switch, Route } from 'react-router-dom';
+import EditTask from '../EditTask';
 
 const TaskContainer = () => {
 
@@ -89,14 +92,30 @@ const TaskContainer = () => {
     else {
         return (
             <div>
-                <TasksList 
-                    todoItems={todoItems} 
-                    onTaskDelete={deleteTaskHandler} 
-                    onTaskUpdate={updateTaskHandler}
-                />
-                <AddTask 
-                    onTaskAdd={addNewTaskHandler}                      
-                />
+                <Switch>
+                    <Route path='/old'>
+                        <TasksList
+                            todoItems={todoItems} 
+                            onTaskDelete={deleteTaskHandler} 
+                            onTaskUpdate={updateTaskHandler}
+                        />
+                    </Route>
+                    <Route path='/taskedit/:id'>
+                        <EditTask
+                            onTaskUpdate={updateTaskHandler} 
+                        />
+                    </Route>
+                    <Route path='/'>
+                        <TasksListNew 
+                            todoItems={todoItems} 
+                            onTaskDelete={deleteTaskHandler} 
+                            onTaskUpdate={updateTaskHandler}
+                        />
+                        <AddTask 
+                            onTaskAdd={addNewTaskHandler}                      
+                        />
+                    </Route>
+                </Switch>                
             </div>
         )             
     }
