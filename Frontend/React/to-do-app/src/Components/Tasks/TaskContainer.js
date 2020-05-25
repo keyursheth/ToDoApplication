@@ -3,7 +3,7 @@ import TasksList from './TasksList'
 import TasksListNew from './TasksListNew'
 import AddTask from './AddTask'
 import { Switch, Route } from 'react-router-dom';
-import EditTask from '../EditTask';
+import EditTask from './EditTask';
 
 const TaskContainer = () => {
 
@@ -66,14 +66,15 @@ const TaskContainer = () => {
           .catch(error => console.error('Unable to delete item.', error));
     }
 
-    const updateTaskHandler = (taskId, taskData) => {
-        fetch(`${baseURI}/${taskId}`, {
+    const editTaskhandler = (item) => {
+       
+        fetch(`${baseURI}/${item.taskId}`, {
             method: 'PUT',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(taskData)
+            body: JSON.stringify(item)
           })
           .then((response) => {               
                if (response.status === 200) {
@@ -97,19 +98,19 @@ const TaskContainer = () => {
                         <TasksList
                             todoItems={todoItems} 
                             onTaskDelete={deleteTaskHandler} 
-                            onTaskUpdate={updateTaskHandler}
+                            onTaskUpdate={editTaskhandler}
                         />
                     </Route>
                     <Route path='/taskedit/:id'>
-                        <EditTask
-                            onTaskUpdate={updateTaskHandler} 
-                        />
+                        <EditTask 
+                            onTaskEdit={editTaskhandler}
+                            baseURI={baseURI} />
                     </Route>
                     <Route path='/'>
                         <TasksListNew 
                             todoItems={todoItems} 
                             onTaskDelete={deleteTaskHandler} 
-                            onTaskUpdate={updateTaskHandler}
+                            onTaskUpdate={editTaskhandler}
                         />
                         <AddTask 
                             onTaskAdd={addNewTaskHandler}                      

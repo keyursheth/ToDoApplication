@@ -8,31 +8,33 @@ const EditTask = (props) => {
     const history = useHistory();
 
     useEffect(() => {
-        fetch(`https://localhost:44347/api/tasks/${id}`)
+        fetch(`${props.baseURI}/${id}`)
         .then((res) => { return res.json(); })
         .then((response) => { setItem(response); })
         .catch(error => console.error('Unable to get task.', error));
-    }, [id]);
+    }, [id, props.baseURI]);
 
-    const updateTaskDescriptionHandler = (event) => {
+    const onTaskDescriptionChange = (event) => {
         const newDesc = event.target.value;
         const newItem = {...item};
         newItem.taskDescription = newDesc;
         setItem(newItem);
     }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const submitClickHandler = (event) => {
+        event.preventDefault();        
+        props.onTaskEdit(item);
+        history.push('/');        
     }
 
-    const handleCancel = () => {
+    const cancelClickHandler = () => {
         history.goBack();
     }
 
     return (
         <>
             <h1>Edit Task</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={submitClickHandler}>
                 <p>
                     <label>
                         Description:                         
@@ -41,21 +43,21 @@ const EditTask = (props) => {
                         type="text" 
                         name="description" 
                         style={{marginLeft:'10px'}} 
+                        autoComplete="off"
                         value={item.taskDescription || ''}
-                        onChange={(event) => updateTaskDescriptionHandler(event)}
+                        onChange={(event) => onTaskDescriptionChange(event)}
                     />
                 </p>
                 <p>
                     <input 
                         type="submit" 
-                        value="Save" 
-                        onClick={() => props.onTaskUpdate(item.taskId, item)}
+                        value="Save"                         
                     />
                     <input 
                         type="button" 
                         value="Cancel" 
                         style={{marginLeft:'10px'}} 
-                        onClick={handleCancel} 
+                        onClick={cancelClickHandler} 
                     />
                 </p>
             </form>
