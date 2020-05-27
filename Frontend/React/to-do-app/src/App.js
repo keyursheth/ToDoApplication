@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import TaskContainer from './Components/Tasks/TaskContainer';
+import TaskContainer from './Containers/TaskContainer';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {

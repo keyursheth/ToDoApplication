@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, Redirect } from 'react-router-dom';
 
 const EditTask = (props) => {
 
     const { id } = useParams();
     const [item, setItem] = useState({});
-    const history = useHistory();
+    const [isCancelorSaved, setIsCancelorSaved] = useState(false); 
 
     useEffect(() => {
         fetch(`${props.baseURI}/${id}`)
@@ -23,12 +23,28 @@ const EditTask = (props) => {
 
     const submitClickHandler = (event) => {
         event.preventDefault();        
-        props.onTaskEdit(item);
-        history.push('/');        
+        
+        fetch(`${props.baseURI}/${item.taskId}`, {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(item)
+          })
+          .then((response) => {               
+               if (response.status === 200) {
+                   setIsCancelorSaved(true);
+               }
+            })
+          .catch(error => {
+              console.error('Unable to update item.', error); 
+              setIsCancelorSaved(false);
+            });
     }
 
-    const cancelClickHandler = () => {
-        history.goBack();
+    if (isCancelorSaved) {
+        return <Redirect to="/" />
     }
 
     return (
@@ -57,7 +73,7 @@ const EditTask = (props) => {
                         type="button" 
                         value="Cancel" 
                         style={{marginLeft:'10px'}} 
-                        onClick={cancelClickHandler} 
+                        onClick={() => { setIsCancelorSaved(true) }} 
                     />
                 </p>
             </form>
