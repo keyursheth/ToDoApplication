@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+
+import ListGroup from 'react-bootstrap/ListGroup'
 
 const TasksListNew = (props) => {
 
@@ -64,33 +67,38 @@ const TasksListNew = (props) => {
         const editTaskPath = `/taskedit/${item.taskId}`;
         
         return(
-            <li key={item.taskId}>    
-                <input 
-                    type="checkbox" 
-                    checked={item.isComplete} 
-                    onChange={() => completeClickHandler(item) }
-                /> 
-                <span
-                    style={{textDecoration:taskCompleteStyle}}>
-                        {item.taskDescription}
-                </span>
-                {(item.isComplete === false) ?
-                    <Link to={editTaskPath}>
+                <ListGroup.Item key={item.taskId}>
+                        {/* <input 
+                            type="checkbox" 
+                            checked={item.isComplete} 
+                            onChange={() => completeClickHandler(item) }
+                        />  */}
+                        <Form.Check 
+                            custom
+                            type="checkbox"
+                            label={item.taskDescription}
+                        />
+                        {/* <span
+                            style={{textDecoration:taskCompleteStyle}}>
+                                {item.taskDescription}
+                        </span> */}
+                        {/* {(item.isComplete === false) ?
+                            <Link to={editTaskPath}>
+                                <input 
+                                    type="button" 
+                                    value="edit" 
+                                    style={{marginLeft:'10px'}} 
+                                /> 
+                            </Link>
+                            : null
+                        }
                         <input 
                             type="button" 
-                            value="edit" 
+                            value="delete" 
                             style={{marginLeft:'10px'}} 
-                        /> 
-                    </Link>
-                    : null
-                }
-                <input 
-                    type="button" 
-                    value="delete" 
-                    style={{marginLeft:'10px'}} 
-                    onClick={() => { deleteClickHandler(item.taskId) }}
-                />                                
-            </li>
+                            onClick={() => { deleteClickHandler(item.taskId) }}
+                        />                                 */}
+                </ListGroup.Item> 
         );
     }
 
@@ -102,9 +110,9 @@ const TasksListNew = (props) => {
     }
     else {
         return (
-            <div>
-                <h1>Tasks List</h1>
-                <ul style={{listStyleType:'none', paddingLeft:'0px'}}>
+            <div style={{marginTop: '15px'}}>
+                <div style={{fontSize: '35px', fontWeight: '600'}}>Reminders</div>
+                <ListGroup variant="flush">
                     {
                         todoItems
                         .sort((a, b) => a.taskDescription.localeCompare(b.taskDescription))
@@ -129,7 +137,7 @@ const TasksListNew = (props) => {
                             return displayTask(item)
                         })
                     }
-                </ul>
+                </ListGroup>
             </div>
         );
     }

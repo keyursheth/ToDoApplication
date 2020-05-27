@@ -1,13 +1,16 @@
 import React from 'react';
 import './App.css';
-import TaskContainer from './Containers/TaskContainer';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+
+import TestBootstrap from './TestBootstarp';
+
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <TaskContainer />
+      <div style={{height: '100%'}}>
+        <TestBootstrap />
       </div>
     </Router>
   );
