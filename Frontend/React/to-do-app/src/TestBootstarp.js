@@ -18,15 +18,15 @@ export default function TestBootstrap() {
 
     return(
         <Container fluid style={{height: '100%'}}>
-            <Row style={{height:'10%', backgroundColor: '#6495ED', alignContent: 'center'}}>
+            <Row style={{height:'10%', alignContent: 'center', borderBottom: '1px solid lightgray'}}>
                 <Col>
                     <Navbar>
-                        <Navbar.Brand href="/" style={{'color': '#F8F8FF', fontSize: 'x-large', fontWeight: '400'}}>
+                        <Navbar.Brand href="/" style={{'color': '#dc3545', fontSize: 'x-large', fontWeight: '400'}}>
                             To-Do Application
                         </Navbar.Brand>                        
                         <Navbar.Collapse className="justify-content-end">
                             <Navbar.Text>
-                                Signed in as: Keyur Sheth
+                                Signed in as: <b>Keyur Sheth</b>
                             </Navbar.Text>
                         </Navbar.Collapse>                       
                     </Navbar>

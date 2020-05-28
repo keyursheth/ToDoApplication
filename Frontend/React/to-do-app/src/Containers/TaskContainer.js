@@ -23,6 +23,7 @@ const TaskContainer = () => {
                 <EditTask baseURI={baseURI} />
             </Route>
             <Route path='/'>
+                <div style={{fontSize: '35px', fontWeight: '600', marginTop: '5px', color: '#dc3545'}}>Reminders</div>
                 <TasksList baseURI={baseURI} onComplete={onComplete} isReloadList={isComplete} />
                 <AddTask baseURI={baseURI} onComplete={onComplete} />
             </Route>

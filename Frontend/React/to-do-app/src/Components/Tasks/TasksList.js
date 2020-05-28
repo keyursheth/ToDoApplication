@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
+import './TaskList.css';
 
 import ListGroup from 'react-bootstrap/ListGroup'
+import InputGroup from 'react-bootstrap/InputGroup'
 
 const TasksListNew = (props) => {
 
@@ -67,17 +69,25 @@ const TasksListNew = (props) => {
         const editTaskPath = `/taskedit/${item.taskId}`;
         
         return(
-                <ListGroup.Item key={item.taskId}>
+                <ListGroup.Item key={item.taskId} style={{padding: '0', paddingBottom: '5px'}}>
                         {/* <input 
                             type="checkbox" 
                             checked={item.isComplete} 
                             onChange={() => completeClickHandler(item) }
                         />  */}
-                        <Form.Check 
-                            custom
-                            type="checkbox"
-                            label={item.taskDescription}
-                        />
+                        <InputGroup style={{alignItems: 'center', width: '75%'}}>
+                            <Form.Check 
+                                custom
+                                type="checkbox"
+                                label=''
+                            />
+                            <Form.Control 
+                                type="text" 
+                                placeholder="name@example.com" 
+                                value={item.taskDescription}
+                                style={{border: 'none', fontSize: 'large'}}
+                            />
+                        </InputGroup>
                         {/* <span
                             style={{textDecoration:taskCompleteStyle}}>
                                 {item.taskDescription}
@@ -110,9 +120,8 @@ const TasksListNew = (props) => {
     }
     else {
         return (
-            <div style={{marginTop: '15px'}}>
-                <div style={{fontSize: '35px', fontWeight: '600'}}>Reminders</div>
-                <ListGroup variant="flush">
+            <div className="listScroll">                
+                <ListGroup variant="flush" style={{marginTop: '5px'}}>
                     {
                         todoItems
                         .sort((a, b) => a.taskDescription.localeCompare(b.taskDescription))

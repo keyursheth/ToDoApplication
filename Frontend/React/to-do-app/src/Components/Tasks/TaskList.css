@@ -1,0 +1,9 @@
+.listScroll {
+    margin-top: 10px;
+    height: 345px;
+    overflow-y: scroll;
+}
+
+.listScroll::-webkit-scrollbar {
+    display: none;
+}

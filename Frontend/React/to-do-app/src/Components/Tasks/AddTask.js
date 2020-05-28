@@ -1,4 +1,8 @@
 import React, { useRef } from 'react'
+import Form from 'react-bootstrap/Form';
+
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
 const AddTask = (props) => {
 
@@ -33,17 +37,27 @@ const AddTask = (props) => {
     }
 
     return(
-        <div>
-            <input 
+        <div style={{marginTop: '35px'}}>
+            {/* <input 
                 type="text" 
                 ref={taskText} 
-            />             
-            <input 
+            />  */}
+            <Form>
+                <Form.Row>
+                    <Col>
+                        <Form.Control placeholder="First name" />
+                    </Col>
+                    <Col>
+                        <Button variant="danger" type="button">Submit</Button>
+                    </Col>
+                </Form.Row>
+            </Form>
+            {/* <input 
                 type="button" 
                 value="Add Task" 
                 style={{marginLeft:'10px'}} 
                 onClick={() => addTaskClick()} 
-            />
+            /> */}
         </div>
     )
 }
