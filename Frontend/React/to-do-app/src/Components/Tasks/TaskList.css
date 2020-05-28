@@ -7,3 +7,18 @@
 .listScroll::-webkit-scrollbar {
     display: none;
 }
+
+.listGroup {
+    padding: 0;
+    padding-bottom: 5px;
+}
+
+.inputGroup {
+    align-items: center;
+    width: 75%
+}
+
+.listItemText {
+    border: none;
+    font-size: large;
+}

@@ -4,17 +4,11 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Navbar from 'react-bootstrap/Navbar'
-
-import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 
 import TaskContainer from './Containers/TaskContainer'
 
 export default function TestBootstrap() {
-
-    const borderStyle = {
-        'border': '1px solid black'
-    }
 
     return(
         <Container fluid style={{height: '100%'}}>

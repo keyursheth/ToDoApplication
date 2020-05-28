@@ -69,13 +69,13 @@ const TasksListNew = (props) => {
         const editTaskPath = `/taskedit/${item.taskId}`;
         
         return(
-                <ListGroup.Item key={item.taskId} style={{padding: '0', paddingBottom: '5px'}}>
+                <ListGroup.Item key={item.taskId} className="listGroup">
                         {/* <input 
                             type="checkbox" 
                             checked={item.isComplete} 
                             onChange={() => completeClickHandler(item) }
                         />  */}
-                        <InputGroup style={{alignItems: 'center', width: '75%'}}>
+                        <InputGroup className="inputGroup">
                             <Form.Check 
                                 custom
                                 type="checkbox"
@@ -83,9 +83,8 @@ const TasksListNew = (props) => {
                             />
                             <Form.Control 
                                 type="text" 
-                                placeholder="name@example.com" 
                                 value={item.taskDescription}
-                                style={{border: 'none', fontSize: 'large'}}
+                                className="listItemText"
                             />
                         </InputGroup>
                         {/* <span
