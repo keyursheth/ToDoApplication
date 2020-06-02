@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-import { Switch, Route } from 'react-router-dom';
 
 import TasksList from '../Components/Tasks/TasksList'
 import AddTask from '../Components/Tasks/AddTask'
-import EditTask from '../Components/Tasks/EditTask';
-import TaskHeading from '../Components/Tasks/TaskHeading';
 
 const TaskContainer = () => {
 
@@ -19,16 +16,10 @@ const TaskContainer = () => {
     }
 
     return (
-        <Switch>            
-            <Route path='/taskedit/:id'>
-                <EditTask baseURI={baseURI} />
-            </Route>
-            <Route path='/'>
-                <TaskHeading />
-                <TasksList baseURI={baseURI} onComplete={onComplete} isReloadList={isComplete} />
-                <AddTask baseURI={baseURI} onComplete={onComplete} />
-            </Route>
-        </Switch>                
+        <>
+            <TasksList baseURI={baseURI} />
+            <AddTask baseURI={baseURI} onComplete={onComplete} />
+        </>                     
     )        
 }
 

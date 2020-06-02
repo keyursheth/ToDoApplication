@@ -133,7 +133,11 @@ namespace ToDo.Api.Controllers
                 
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetTasksByUser", tasks.TaskId);
+                var newTask = await _context.Tasks.FindAsync(tasks.TaskId);
+                
+                var newtaskModel = TasksMapper.GetTaskModelFromTaskEntity(newTask);
+
+                return CreatedAtAction("GetTasksByUser", newtaskModel);
             }
             catch (Exception ex)
             {
