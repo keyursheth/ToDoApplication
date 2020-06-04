@@ -29,3 +29,8 @@
     margin-top: 5px;
     color: #dc3545;
 }
+
+.custom-control-input:checked~.custom-control-label::before {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}

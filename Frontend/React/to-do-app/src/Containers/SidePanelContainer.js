@@ -4,10 +4,10 @@ import Lists from '../Components/SidePanel/Lists';
 import Filters from '../Components/SidePanel/Filters';
 import DeleteCompleteTasks from '../Components/SidePanel/DeleteCompleteTasks'
 
-const SidePanelContainer = () => {
+const SidePanelContainer = ({statusFilterDispatch}) => {
     return(
         <>
-            <Filters />                    
+            <Filters statusFilterDispatch={statusFilterDispatch} />                    
             <Lists /> 
             <DeleteCompleteTasks />        
         </>
